@@ -1,4 +1,4 @@
-#include <digitalWriteFast.h>
+
 int midisi=1;
 #include <MIDIUSB.h>
  int note=29;  
@@ -13,8 +13,8 @@ int velocity=127;
 
 SoftwareSerial mySerial(0, 1);
 //MIDI baud rate
-#define SERIAL_RATE 57600
-//#define SERIAL_RATE 31250
+//#define SERIAL_RATE 57600
+#define SERIAL_RATE 31250
 
 // Pin Definitions
 int outcol[NUM_COLS]{A0,15,14,16,10,9,8,7};
@@ -78,7 +78,7 @@ void setup()
   }
   pinMode(A1,INPUT);
 for(int a; a<NUM_COLS;a++){
-  pinModeFast(outcol[a],OUTPUT);
+  pinMode(outcol[a],OUTPUT);
 }
 
  //mySerial.begin(SERIAL_RATE);
@@ -234,10 +234,10 @@ void scanColumn(int colNum)
 {
 for(int a; a<NUM_COLS;a++){
   //digitalWriteFast(outcol[a],1);
-  pinModeFast(outcol[a],0);
+  pinMode(outcol[a],0);
 }
-  pinModeFast(outcol[colNum],1);
-digitalWriteFast(outcol[colNum],0);
+  pinMode(outcol[colNum],1);
+digitalWrite(outcol[colNum],0);
 
 
  
@@ -245,9 +245,9 @@ digitalWriteFast(outcol[colNum],0);
 
 void noteOn(int row, int col)
 { midiEventPacket_t noteOn = {0x09, 0x90 | channel, keyToMidiMap[row][col], velocity};
-    if(midisi==1){
+
  MidiUSB.sendMIDI(noteOn);
- }
+
  mySerial.write(NOTE_ON_CMD);
  mySerial.write(keyToMidiMap[row][col]);
  mySerial.write(velocity);
@@ -259,8 +259,8 @@ void noteOff(int row, int col)
  mySerial.write(keyToMidiMap[row][col]);
  mySerial.write(velocity);
   midiEventPacket_t noteOff = {0x08, 0x80 | channel, keyToMidiMap[row][col], velocity};
-  if(midisi==1){
+ 
  MidiUSB.sendMIDI(noteOff);
-  }
+  
 }
 
